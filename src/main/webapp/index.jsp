@@ -19,7 +19,7 @@
                 <h1>Pick a Task</h1>
                 <ul>
                     <li><a href="authorController?action=list">View all Authors</a></li>
-                    <li>More to Come</li>
+                    <li><a href="bc?action=list">View all Books</a></li>
                 </ul>
                 <jsp:include page="footer.jsp" />
             </div>

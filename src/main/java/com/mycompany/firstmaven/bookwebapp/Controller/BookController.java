@@ -5,8 +5,8 @@
  */
 package com.mycompany.firstmaven.bookwebapp.Controller;
 
-import com.mycompany.firstmaven.bookwebapp.Model.Author;
-import com.mycompany.firstmaven.bookwebapp.Model.AuthorService;
+import com.mycompany.firstmaven.bookwebapp.Model.Book;
+import com.mycompany.firstmaven.bookwebapp.Model.BookService;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,20 +23,19 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author jordanrehbein
  */
-@WebServlet(name = "AuthorController", urlPatterns = {"/authorController"})
-public class AuthorController extends HttpServlet {
+@WebServlet(name = "BookController", urlPatterns = {"/bc"})
+public class BookController extends HttpServlet {
     @EJB
-    private AuthorService authorService;
+    private BookService bookService;
 
     public static final String ACTION = "action";
     public static final String ID = "id";
-    public static final String NAME = "name";
     public static final String LIST_ACTION = "list";
     public static final String ADD_ACTION = "add";
     public static final String SAVE_ACTION = "save";
     public static final String EDIT_DELETE_ACTION = "editDelete";
     public static final String DELETE_ACTION = "delete";
-
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -46,45 +45,45 @@ public class AuthorController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String destination = "/authorList.jsp";
+        String destination = "/bookList.jsp";
 
         try {
             String action = request.getParameter(ACTION);
             String id = request.getParameter(ID);
-
-            List<Author> authorList = null;
-            Author author = new Author();
+            
+            List<Book> bookList = null;
+            Book book = new Book();
 
             if (action.equalsIgnoreCase(LIST_ACTION)) {
-                destination = "/authorList.jsp";
-                refreshList(authorService, request);
+                destination = "/bookList.jsp";
+                refreshList(bookService, request);
             } else if (action.equalsIgnoreCase(ADD_ACTION)) {
-                destination = "/authorAdd.jsp";
-                refreshList(authorService, request);
+                destination = "/bookAdd.jsp";
+                refreshList(bookService, request);
             } else if (action.equalsIgnoreCase(SAVE_ACTION)) {
-                String name = request.getParameter("name").trim();
-                author = authorService.getAuthor(id);
+                String title = request.getParameter("title").trim();
+                String isbn = request.getParameter("isbn").trim();
+                String authorId = request.getParameter("authorId").trim();
                 if (id == null) {
-                    destination = "/authorAdd.jsp";
-                    Date date = new Date();
-                    authorService.addAuthor(name, date);
-                    refreshList(authorService, request);
+                    destination = "/bookAdd.jsp";
+                    bookService.addNewBook(title, isbn, authorId);
+                    refreshList(bookService, request);
                 } else {
-                    destination = "/authorList.jsp";
-                    String date = request.getParameter("date").trim();
-                    authorService.updateAuthorById(id, name, date);
-                    refreshList(authorService, request);
+                    destination = "/bookList.jsp";
+                    bookService.updateBook(id, title, isbn, authorId);
+                    refreshList(bookService, request);
                 }
             } else if (action.equalsIgnoreCase(EDIT_DELETE_ACTION)) {
-                destination = "/authorEdit.jsp";
-                author = authorService.getAuthor(id);
-                request.setAttribute("author", author);
+                destination = "/bookEdit.jsp";
+                book = bookService.getBook(id);
+                request.setAttribute("book", book);
             } else if (action.equalsIgnoreCase(DELETE_ACTION)) {
                 destination = "/authorList.jsp";
-                authorService.removeAuthorById(id);
-                refreshList(authorService, request);
+                bookService.removeBookById(id);
+                refreshList(bookService, request);
             }
 
         } catch (Exception e) {
@@ -96,10 +95,10 @@ public class AuthorController extends HttpServlet {
         view.forward(request, response);
     }
 
-    private void refreshList(AuthorService authorService, HttpServletRequest request) throws Exception {
-        List<Author> authorList;
-        authorList = authorService.findAll();
-        request.setAttribute("authorList", authorList);
+    private void refreshList(BookService authorService, HttpServletRequest request) throws Exception {
+        List<Book> bookList;
+        bookList = authorService.findAll();
+        request.setAttribute("bookList", bookList);
     }
 
     @Override
@@ -107,7 +106,7 @@ public class AuthorController extends HttpServlet {
         
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

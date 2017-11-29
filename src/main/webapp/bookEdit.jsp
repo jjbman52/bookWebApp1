@@ -1,6 +1,6 @@
 <%-- 
-    Document   : authorEdit
-    Created on : Oct 12, 2017, 6:09:07 PM
+    Document   : bookEdit
+    Created on : Nov 16, 2017, 6:30:28 PM
     Author     : jordanrehbein
 --%>
 
@@ -14,32 +14,34 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="stylesheet.css">
         <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
-        <title>Author List</title>
+        <title>Book List</title>
     </head>
     <div id="backround">
         <body>
             <div class="body">
-                <h1>Edit Author</h1>
+                <h1>Edit Book</h1>
                 <table>
                     <tr>
-                        <td >${author.authorId}</td>
-                        <td>${author.authorName}</td>
-                        <td><fmt:formatDate pattern = "yyy-MM-dd" value = "${author.dateAdded}" /></td>
-                        <td><input type="button" value="Delete" onclick="location.href = 'authorController?action=delete&id=${author.authorId}'" /></td>
+                        <td >${book.bookId}</td>
+                        <td>${book.isbn}</td>
+                        <td>${book.title}</td>
+                        <td>${b.authorId}</td>
+                        <td><input type="button" value="Delete" onclick="location.href = 'bc?action=delete&id=${book.bookId}'" /></td>
                     </tr>
                 </table>
                 <br>
-                <form name="form" id="form" method="POST" action="authorController?action=save&id=${author.authorId}">
+                <form name="form" id="form" method="POST" action="bc?action=save&id=${book.bookId}">
                     <table border="1">
                         <tr>
-                            <td>Enter New Name:</td> <td><input type="text" value="${author.authorName}" name="name"></td>
-                            <td>Enter New Date:</td> <td><input type="text" value="<fmt:formatDate pattern = "yyy-MM-dd" value="${author.dateAdded}" />" name="date"></td>
+                            <td>Enter Title:</td> <td><input type="text" value="${book.title}" name="title"></td>
+                            <td>Enter isbn</td> <td><input type="text" value="${book.isbn}" name="isbn"></td>
+                            <td>Enter Author ID</td> <td><input type="text" value="${book.author.authorId}" name="authorId"></td>
                             <td><input type="submit" name="submit" value="Save"></td>
                         </tr>
                     </table>
                 </form>
                 <br>
-                <input type="button" value="Back" onclick="location.href = 'authorController?action=list'" />
+                <input type="button" value="Back" onclick="location.href = 'bc?action=list'" />
                 <jsp:include page="footer.jsp" />
             </div>
         </body>
